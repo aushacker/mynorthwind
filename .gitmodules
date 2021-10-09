@@ -1,0 +1,3 @@
+[submodule "mywind"]
+	path = mywind
+	url = https://github.com/dalers/mywind/

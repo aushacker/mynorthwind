@@ -1,4 +1,4 @@
-package com.github.aushacker.mynorthwind.jpa;
+package com.github.aushacker.northwind.jpa;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,6 +7,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
+
+import com.github.aushacker.northwind.jpa.Customer;
+
 import org.junit.Test;
 
 public class TestCustomer {

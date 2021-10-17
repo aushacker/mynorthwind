@@ -1,10 +1,17 @@
 package com.github.aushacker.northwind.jpa;
 
+import static javax.persistence.FetchType.LAZY;
+
+import java.util.Collection;
+
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +21,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id", nullable=false)
-    private int id;
+    private long id;
 
     @Column(name="company", length=50)
     private String company;
@@ -43,7 +50,7 @@ public class Customer {
     @Column(name="fax_number", length=25)
     private String faxNumber;
 
-    @Column(name="address", length=715827882)
+    @Column(name="address", columnDefinition="LONGTEXT")
     private String address;
 
     @Column(name="city", length=50)
@@ -58,14 +65,24 @@ public class Customer {
     @Column(name="country_region", length=50)
     private String countryRegion;
 
-    @Column(name="web_page", length=715827882)
+    @Basic(fetch=LAZY)
+    @Lob
+    @Column(name="web_page", columnDefinition="LONGTEXT")
     private String webPage;
 
-    @Column(name="notes", length=715827882)
+    @Basic(fetch=LAZY)
+    @Lob
+    @Column(name="notes", columnDefinition="LONGTEXT")
     private String notes;
 
-    @Column(name="attachments")
+    @Basic(fetch=LAZY)
+    @Lob
+    @Column(name="attachments", columnDefinition="LONGBLOB")
     private byte[] attachments;
+
+    // Relations
+    @OneToMany(mappedBy="customer")
+    private Collection<Order> orders;
 
     public String getAddress() {
         return address;
@@ -107,7 +124,7 @@ public class Customer {
         return homePhone;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -125,6 +142,10 @@ public class Customer {
 
     public String getNotes() {
         return notes;
+    }
+
+    public Collection<Order> getOrders() {
+        return orders;
     }
 
     public String getStateProvince() {

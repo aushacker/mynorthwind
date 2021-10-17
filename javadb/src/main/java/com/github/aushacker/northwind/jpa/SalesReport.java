@@ -24,11 +24,7 @@ public class SalesReport {
     private String filterRowSource;
 
     @Column(name="default", nullable=false)
-    private Boolean default;
-
-    public Boolean getDefault() {
-        return default;
-    }
+    private Boolean reportDefault;
 
     public String getDisplay() {
         return display;
@@ -42,12 +38,12 @@ public class SalesReport {
         return groupBy;
     }
 
-    public String getTitle() {
-        return title;
+    public Boolean getReportDefault() {
+        return reportDefault;
     }
 
-    public void setDefault(Boolean default) {
-        this.default = default;
+    public String getTitle() {
+        return title;
     }
 
     public void setDisplay(String display) {
@@ -60,6 +56,10 @@ public class SalesReport {
 
     public void setGroupBy(String groupBy) {
         this.groupBy = groupBy;
+    }
+
+    public void setReportDefault(Boolean reportDefault) {
+        this.reportDefault = reportDefault;
     }
 
     public void setTitle(String title) {

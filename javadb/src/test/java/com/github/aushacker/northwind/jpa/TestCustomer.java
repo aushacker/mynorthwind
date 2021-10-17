@@ -1,5 +1,6 @@
 package com.github.aushacker.northwind.jpa;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
@@ -12,23 +13,24 @@ import com.github.aushacker.northwind.jpa.Customer;
 
 import org.junit.Test;
 
-public class TestCustomer {
+public class TestCustomer extends AbstractPersistenceTest {
 
- 	private static final String PERSISTENCE_UNIT_NAME = "nw1";
+    private static final String PERSISTENCE_UNIT_NAME = "nw1";
 
     @Test
     public void testCreate() {
-	    EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-		EntityManager em = factory.createEntityManager();
+        Customer c = new Customer();
+        c.setCompany("Acme Inc.");
+        c.setFirstName("Wily");
+        c.setLastName("Coyote");
+        em.persist(c);
+    }
 
-		em.getTransaction().begin();
-		
-		Customer c = new Customer();
-		c.setCompany("Acme Inc.");
-		c.setFirstName("Wily");
-		c.setLastName("Coyote");
-		em.persist(c);
-		em.getTransaction().commit();
-		em.close();
+    @Test
+    public void testFind() {
+        Customer c = em.find(Customer.class, 1L);
+        assertEquals("Comany name incorrect", "Company A", c.getCompany());
+
+        assertEquals("Order count incorrect", 2, c.getOrders().size());
     }
 }

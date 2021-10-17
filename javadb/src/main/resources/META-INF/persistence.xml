@@ -16,7 +16,10 @@
 	        <property name="eclipselink.logging.level" value="INFO"/> 
         </properties>
 
-        <class>com.github.aushacker.mynorthwind.jpa.Customer</class>
+        <class>com.github.aushacker.northwind.jpa.Customer</class>
+        <class>com.github.aushacker.northwind.jpa.Order</class>
+        <class>com.github.aushacker.northwind.jpa.OrderStatus</class>
+        <class>com.github.aushacker.northwind.jpa.OrderTaxStatus</class>
 
     </persistence-unit>
 

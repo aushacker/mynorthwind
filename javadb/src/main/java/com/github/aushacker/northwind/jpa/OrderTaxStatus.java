@@ -1,32 +1,40 @@
 package com.github.aushacker.northwind.jpa;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="orders_tax_status", schema="northwind")
 public class OrderTaxStatus {
 
+    @Id
     @Column(name="id", nullable=false)
-    private Integer id;
+    private int id;
 
     @Column(name="tax_status_name", nullable=false, length=50)
     private String taxStatusName;
 
-    public Integer getId() {
+    // Relations
+    @OneToMany(mappedBy="taxStatus")
+    private Collection<Order> orders;
+
+    public int getId() {
         return id;
+    }
+
+    public Collection<Order> getOrders() {
+        return orders;
     }
 
     public String getTaxStatusName() {
         return taxStatusName;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setTaxStatusName(String taxStatusName) {

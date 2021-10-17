@@ -1,5 +1,7 @@
 package com.github.aushacker.northwind.jpa;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

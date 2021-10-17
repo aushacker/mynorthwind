@@ -1,10 +1,15 @@
 package com.github.aushacker.northwind.jpa;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -14,13 +19,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id", nullable=false)
-    private int id;
+    private long id;
 
     @Column(name="employee_id")
     private int employeeId;
-
-    @Column(name="customer_id")
-    private int customerId;
 
     @Column(name="order_date")
     private LocalDateTime orderDate;
@@ -49,10 +51,10 @@ public class Order {
     @Column(name="ship_country_region", length=50)
     private String shipCountryRegion;
 
-    @Column(name="shipping_fee")
+    @Column(name="shipping_fee", precision=19, scale=4)
     private BigDecimal shippingFee;
 
-    @Column(name="taxes")
+    @Column(name="taxes", precision=19, scale=4)
     private BigDecimal taxes;
 
     @Column(name="payment_type", length=50)
@@ -67,21 +69,27 @@ public class Order {
     @Column(name="tax_rate")
     private Double taxRate;
 
-    @Column(name="tax_status_id")
-    private Integer taxStatusId;
-
     @Column(name="status_id")
     private Integer statusId;
 
-    public int getCustomerId() {
-        return customerId;
+    // Relations
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name="tax_status_id")
+    private OrderTaxStatus taxStatus;
+
+    public Customer getCustomer() {
+        return customer;
     }
 
     public int getEmployeeId() {
         return employeeId;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -145,24 +153,20 @@ public class Order {
         return taxRate;
     }
 
-    public Integer getTaxStatusId() {
-        return taxStatusId;
+    public OrderTaxStatus getTaxStatus() {
+        return taxStatus;
     }
 
     public BigDecimal getTaxes() {
         return taxes;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setNotes(String notes) {
@@ -225,8 +229,8 @@ public class Order {
         this.taxRate = taxRate;
     }
 
-    public void setTaxStatusId(Integer taxStatusId) {
-        this.taxStatusId = taxStatusId;
+    public void setTaxStatus(OrderTaxStatus taxStatus) {
+        this.taxStatus = taxStatus;
     }
 
     public void setTaxes(BigDecimal taxes) {

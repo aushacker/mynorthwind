@@ -10,7 +10,7 @@ spec:
   - name: ssh-creds
     secret:
       secretName: ssh-sjd
-  - name: output
+  - name: data
     volumeClaimTemplate:
       spec:
         accessModes:
@@ -21,3 +21,7 @@ spec:
   params:
   - name: git-url
     value: ssh://sjdavies@maximin/data1/git/mynorthwind.git
+  - name: image
+    value: image-registry.openshift-image-registry.svc:5000/test1/mynorthwind
+  - name: context
+    value: dockerdb

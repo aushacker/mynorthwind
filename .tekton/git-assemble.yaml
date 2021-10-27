@@ -5,27 +5,40 @@ metadata:
 spec:
   workspaces:
   - name: ssh-creds
-  - name: output
+  - name: data
   params:
-  - name: git-url
+  -
+    name: git-url
     type: string
     description: git repo url
-  - name: git-revision
+  -
+    name: git-revision
     type: string
     description: "branch, tag, sha etc."
     default: master
-  - name: git-subdir
+  -
+    name: git-subdir
     type: string
     description: git subdirectory
     default: ""
+  -
+    name: context
+    type: string
+    description: context path to Dockerfile
+    default: ""
+  -
+    name: image
+    type: string
+    description: buildah output image name
   tasks:
-  - name: git-fetch
+  -
+    name: git-fetch
     taskRef:
       name: git-clone
       kind: ClusterTask
     workspaces:
     - name: output
-      workspace: output
+      workspace: data
     - name: ssh-directory
       workspace: ssh-creds
     params:
@@ -37,3 +50,18 @@ spec:
       value: $(params.git-subdir)
     - name: sslVerify
       value: 'false'
+  -
+    name: buildah-assembly
+    taskRef:
+      name: buildah
+      kind: ClusterTask
+    workspaces:
+    - name: source
+      workspace: data
+    params:
+    - name: IMAGE
+      value: $(params.image)
+    - name: CONTEXT
+      value: $(params.context)
+    runAfter:
+    - git-fetch

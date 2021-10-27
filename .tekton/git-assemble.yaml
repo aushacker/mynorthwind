@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: git-assemble
+spec:
+  workspaces:
+  - name: ssh-creds
+  - name: output
+  params:
+  - name: git-url
+    type: string
+    description: git repo url
+  - name: git-revision
+    type: string
+    description: "branch, tag, sha etc."
+    default: master
+  - name: git-subdir
+    type: string
+    description: git subdirectory
+    default: ""
+  tasks:
+  - name: git-fetch
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: output
+    - name: ssh-directory
+      workspace: ssh-creds
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.git-revision)
+    - name: subdirectory
+      value: $(params.git-subdir)
+    - name: sslVerify
+      value: 'false'

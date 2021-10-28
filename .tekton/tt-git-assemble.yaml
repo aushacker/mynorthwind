@@ -1,0 +1,44 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: git-assemble
+spec:
+  params:
+  -
+    name: git-url
+    description: The git repository url
+  -
+    name: git-revision
+    description: The git revision
+    default: master
+
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: run-git-assemble-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: git-assemble
+      params:
+      - name: git-url
+        value: $(tt.params.git-url)
+      - name: git-revision
+        value: $(tt.params.git-revision)
+      - name: context
+        value: dockerdb
+      - name: image
+        value: image-registry.openshift-image-registry.svc:5000/test1/mynorthwind
+      workspaces:
+      - name: data
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 500Mi
+      - name: ssh-creds
+        secret:
+          secretName: ssh-sjd

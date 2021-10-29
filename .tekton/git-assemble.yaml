@@ -3,9 +3,6 @@ kind: Pipeline
 metadata:
   name: git-assemble
 spec:
-  workspaces:
-  - name: ssh-creds
-  - name: data
   params:
   -
     name: git-url
@@ -30,38 +27,73 @@ spec:
     name: image
     type: string
     description: buildah output image name
+
+  workspaces:
+  - name: ssh-creds
+  - name: data
+  - name: maven-settings
+
   tasks:
   -
     name: git-fetch
     taskRef:
       name: git-clone
       kind: ClusterTask
-    workspaces:
-    - name: output
-      workspace: data
-    - name: ssh-directory
-      workspace: ssh-creds
     params:
-    - name: url
+    -
+      name: url
       value: $(params.git-url)
-    - name: revision
+    -
+      name: revision
       value: $(params.git-revision)
-    - name: subdirectory
+    -
+      name: subdirectory
       value: $(params.git-subdir)
-    - name: sslVerify
+    -
+      name: sslVerify
       value: 'false'
+    workspaces:
+    -
+      name: output
+      workspace: data
+    -
+      name: ssh-directory
+      workspace: ssh-creds
   -
-    name: buildah-assembly
+    name: build-database-image
     taskRef:
       name: buildah
       kind: ClusterTask
-    workspaces:
-    - name: source
-      workspace: data
+    runAfter:
+    - git-fetch
     params:
     - name: IMAGE
       value: $(params.image)
     - name: CONTEXT
       value: $(params.context)
+    workspaces:
+    - name: source
+      workspace: data
+  -
+    name: maven-jpa
+    taskRef:
+      name: maven
+      kind: ClusterTask
     runAfter:
     - git-fetch
+    params:
+    -
+      name: CONTEXT_DIR
+      value: javadb
+    -
+      name: GOALS
+      value:
+      - --batch-mode
+      - -DskipTests
+      - clean
+      - package
+    workspaces:
+    - name: source
+      workspace: data
+    - name: maven-settings
+      workspace: maven-settings

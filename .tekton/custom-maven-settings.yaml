@@ -8,10 +8,10 @@ data:
     <settings>
       <mirrors>
         <mirror>
-          <id>maven.org</id>
+          <id>nexus</id>
           <name>Default mirror</name>
-          <url>https://repo1.maven.org/maven2</url>
-          <mirrorOf>central</mirrorOf>
+          <url>http://nexus3-dev-tools.apps-crc.testing/repository/maven-central/</url>
+          <mirrorOf>*</mirrorOf>
         </mirror>
       </mirrors>
     </settings>

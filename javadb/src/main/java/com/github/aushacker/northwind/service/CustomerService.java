@@ -3,27 +3,29 @@
  */
 package com.github.aushacker.northwind.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import com.github.aushacker.northwind.jpa.Customer;
 
 /**
  * @author aushacker
  */
+@RequestScoped
 public class CustomerService {
 
+	@Inject
+	private EntityManager em;
+
 	public Collection<Customer> findAll() {
-		return new ArrayList<Customer>();
+		return em.createQuery("select c from Customer c", Customer.class).getResultList();
 	}
 
 	public Customer findById(long id) {
-		Customer c = new Customer();
-		c.setFirstName("Red");
-		c.setLastName("Hat");
-		c.setCity("Canberra");
-
-		return c;
+		return em.find(Customer.class, id);
 	}
 
 }

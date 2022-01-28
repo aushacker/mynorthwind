@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: util
+spec:
+  workspaces:
+  - name: source
+  steps:
+    - name: debug
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      workingDir: /workspace/source
+      command: ["/bin/bash", "-c"]
+      args:
+        - |-
+          ls
+#          oc apply -f $(inputs.params.manifest_dir)
+#          echo -----------------------------------
+

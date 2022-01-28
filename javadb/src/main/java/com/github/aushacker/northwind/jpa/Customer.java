@@ -2,6 +2,7 @@ package com.github.aushacker.northwind.jpa;
 
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Basic;
@@ -83,6 +84,10 @@ public class Customer {
     // Relations
     @OneToMany(mappedBy="customer")
     private Collection<Order> orders;
+
+    public void clearOrders() {
+    	orders = new ArrayList<>();
+    }
 
     public String getAddress() {
         return address;

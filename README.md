@@ -1,6 +1,8 @@
 # mynorthwind
 
-A sample database docker image and a JPA library to process it.
+An example database image and a JPA library to process it.
 
-1. dockerdb contains the Dockerfile context
-2. javadb contains a Maven project with JPA annotated types
+| Component | Description |
+| :-------- | :---------- |
+| dockerdb  | A mysql 8.0 based image that contains the Northwind schema |
+| javadb    | A Maven based microservice with JPA annotated types |

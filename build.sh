@@ -18,6 +18,14 @@ clean() {
     podman rmi mynorthwind:${dbver}
 }
 
+build_app() {
+    echo "*** Building application image ***"
+    pushd javadb > /dev/null
+    buildah from registry.redhat.io/jboss-eap-7/eap73-openjdk8-openshift-rhel7 as builder
+    buildah commit javadb
+    popd > /dev/null
+}
+
 build_db() {
     echo "*** Building database image ***"
     pushd dockerdb > /dev/null
@@ -50,6 +58,7 @@ for arg in "$@"
 do
     case $arg in
         clean) clean ;;
+        build_app) build_app ;;
         build_db) build_db ;;
         start_db) start_db ;;
         stop_db) stop_db ;;

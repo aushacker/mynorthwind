@@ -1,46 +1,8 @@
-#---
-#apiVersion: image.openshift.io/v1
-#kind: ImageStream
-#metadata:
-#  name: northwinddb
-#  labels:
-#    app: nwdb
-#spec:
-#  tags:
-#  - name: '1.0'
-#    from:
-#      kind: DockerImage
-#      name: 'quay.io/sdavies/mynorthwind:1.0'
-#    generation: 1
-#    referencePolicy:
-#      type: Source
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nwconfig
-  labels:
-    app: nwdb
-data:
-  MYSQL_USER: test1
-  MYSQL_DATABASE: northwind
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: dbpw
-  labels:
-    app: nwdb
-stringData:
-  MYSQL_PASSWORD: mypa55
-  MYSQL_ROOT_PASSWORD: r00tpa55
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nwdb
-  labels:
-    app: nwdb
 spec:
   replicas: 1
   selector:

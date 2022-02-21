@@ -5,6 +5,7 @@ resources:
 - config.yaml
 - secret.yaml
 - deployment.yaml
+- service.yaml
 
 commonLabels:
   app: nwdb

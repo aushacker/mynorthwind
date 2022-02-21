@@ -1,7 +1,7 @@
-apiVersion: tekton.dev/v1beta1
 kind: Pipeline
+apiVersion: tekton.dev/v1beta1
 metadata:
-  name: git-assemble
+  name: mynw-assemble
 spec:
   params:
   -
@@ -29,7 +29,6 @@ spec:
     description: buildah output image name
 
   workspaces:
-#  - name: ssh-creds
   - name: data
   - name: maven-settings
 
@@ -56,9 +55,6 @@ spec:
     -
       name: output
       workspace: data
-#    -
-#      name: ssh-directory
-#      workspace: ssh-creds
   -
     name: build-database-image
     taskRef:

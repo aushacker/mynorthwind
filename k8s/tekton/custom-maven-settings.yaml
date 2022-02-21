@@ -10,7 +10,7 @@ data:
         <mirror>
           <id>nexus</id>
           <name>Default mirror</name>
-          <url>http://nexus3-ci-common.apps-crc.testing/repository/maven-central/</url>
+          <url>http://maximin:8081/repository/maven-redhat/</url>
           <mirrorOf>*</mirrorOf>
         </mirror>
       </mirrors>

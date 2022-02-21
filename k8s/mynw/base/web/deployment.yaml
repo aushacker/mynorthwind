@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nw-web
+  labels:
+    app.openshift.io/runtime: eap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: nw-web
+  template:
+    metadata:
+      labels:
+        deployment: nw-web
+    spec:
+      containers:
+      - image: quay.io/sdavies/javadb:latest
+        name: nw-web
+        env:
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: nwconfig
+                key: MYSQL_USER
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: nwconfig
+                key: MYSQL_DATABASE
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dbpw
+                key: MYSQL_PASSWORD
+        ports:
+          - containerPort: 8080

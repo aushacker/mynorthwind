@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nwdb
+  name: nw-db
   labels:
     app.openshift.io/runtime: mysql-database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      deployment: nwdb
+      deployment: nw-db
   template:
     metadata:
       labels:
-        deployment: nwdb
+        deployment: nw-db
     spec:
       containers:
-      - image: quay.io/sdavies/mynorthwind:1.0
+      - image: 'image-registry.openshift-image-registry.svc:5000/mynorthwind/mynorthwind'
         name: northwind
         env:
           - name: MYSQL_USER

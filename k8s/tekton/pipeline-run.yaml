@@ -1,22 +1,19 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  generateName: run-git-assemble-
+  generateName: build-
 spec:
   pipelineRef:
-    name: git-assemble
+    name: build
   serviceAccountName: pipeline
   params:
   - name: git-url
     value: https://github.com/aushacker/mynorthwind.git
   - name: image
-    value: image-registry.openshift-image-registry.svc:5000/test1/mynorthwind
+    value: 'image-registry.openshift-image-registry.svc:5000/mynorthwind/mynorthwind'
   - name: context
     value: dockerdb
   workspaces:
-#  - name: ssh-creds
-#    secret:
-#      secretName: ssh-sjd
   - name: data
     volumeClaimTemplate:
       spec:
@@ -24,7 +21,7 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 500Mi
+            storage: '500Mi'
   - name: maven-settings
     configMap:
       name: custom-maven-settings

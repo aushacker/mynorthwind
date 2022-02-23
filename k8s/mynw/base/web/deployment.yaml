@@ -34,5 +34,8 @@ spec:
               secretKeyRef:
                 name: dbpw
                 key: MYSQL_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: web-datasource
         ports:
           - containerPort: 8080

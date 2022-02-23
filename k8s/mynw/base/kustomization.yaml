@@ -5,6 +5,4 @@ resources:
 - config.yaml
 - secret.yaml
 - db
-
-commonLabels:
-  app: mynorthwind
+- web

@@ -1,3 +1,6 @@
 [submodule "dockerdb/mywind"]
 	path = dockerdb/mywind
 	url = https://github.com/dalers/mywind/
+[submodule "javadb/s2i/custom/modules"]
+	path = javadb/s2i/custom/modules
+	url = https://github.com/aushacker/jboss-jdbc.git

@@ -3,3 +3,7 @@ kind: Kustomization
 
 resources:
 - base
+
+commonLabels:
+  app: mynorthwind
+  app.kubernetes.io/part-of: mynorthwind

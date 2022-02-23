@@ -1,7 +1,7 @@
 kind: Pipeline
 apiVersion: tekton.dev/v1beta1
 metadata:
-  name: mynw-assemble
+  name: build
 spec:
   params:
   -
@@ -12,7 +12,7 @@ spec:
     name: git-revision
     type: string
     description: "branch, tag, sha etc."
-    default: master
+    default: main
   -
     name: git-subdir
     type: string
@@ -34,7 +34,7 @@ spec:
 
   tasks:
   -
-    name: git-fetch
+    name: fetch-repository
     taskRef:
       name: git-clone
       kind: ClusterTask
@@ -56,12 +56,12 @@ spec:
       name: output
       workspace: data
   -
-    name: build-database-image
+    name: build-database
     taskRef:
       name: buildah
       kind: ClusterTask
     runAfter:
-    - git-fetch
+    - fetch-repository
     params:
     - name: IMAGE
       value: $(params.image)
@@ -71,12 +71,12 @@ spec:
     - name: source
       workspace: data
   -
-    name: maven-jpa
+    name: build-app
     taskRef:
       name: maven
       kind: ClusterTask
     runAfter:
-    - git-fetch
+    - fetch-repository
     params:
     -
       name: CONTEXT_DIR
@@ -98,8 +98,8 @@ spec:
     taskRef:
       name: util
     runAfter:
-    - build-database-image
-    - maven-jpa
+    - build-database
+    - build-app
     workspaces:
     - name: source
       workspace: data

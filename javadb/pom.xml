@@ -94,6 +94,9 @@
   </reporting>
   -->
 
+<!--
+  - Project requires Red Hat Repo.
+  - Commented due to global config i.e. ~/.m2/settings.xml
   <repositories>
     <repository>
       <name>Red Hat Repository GA</name>
@@ -110,6 +113,6 @@
       </snapshots>
     </repository>
   </repositories>
+-->
 
 </project>
-

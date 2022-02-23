@@ -1,12 +1,21 @@
 #!/bin/bash
 #
-# Various fragments for developer desktop builds
+# Tools for developer desktop builds.
+# Builds and runs app and db containers locally.
+#
+# Requires:
+# - podman
+# - buildah
+# - local images for JBoss EAP (artifacts and runtime)
+#
+# Feb 23, 2022
 #
 mavenMirror='http://maximin:8081/repository/maven-redhat/'
 eapImage='registry.redhat.io/jboss-eap-7/eap73-openjdk8-openshift-rhel7'
+eapImageRuntime='registry.redhat.io/jboss-eap-7/eap73-openjdk8-openshift-rhel7'
 
 usage() {
-    echo "Usage: build.sh COMMAND COMMAND..."
+    echo "Usage: build.sh COMMAND [COMMAND]..."
 }
 
 clean() {
@@ -16,7 +25,7 @@ clean() {
     then
         stop_db
     fi
-    podman rmi mynorthwind:${dbver}
+    podman rmi nw-db
 }
 
 build_app() {
@@ -47,10 +56,10 @@ build_db() {
 
 start_app() {
     echo "*** Starting web container ***"
-    podman run --name javadb -d --rm \
+    podman run --name nw-app -d --rm \
       -p 8080:8080 \
       -e DB_SERVICE_PREFIX_MAPPING=northwind-mysql=DS1 \
-      -e NORTHWIND_MYSQL_SERVICE_HOST=192.168.1.80 \
+      -e NORTHWIND_MYSQL_SERVICE_HOST=$(hostname) \
       -e NORTHWIND_MYSQL_SERVICE_PORT=3306 \
       -e DS1_JNDI=java:/NorthwindDS \
       -e DS1_DATABASE=northwind \
@@ -66,7 +75,7 @@ start_app() {
 
 start_db() {
     echo "*** Starting Northwind database container ***"
-    podman run --name nwdb -d --rm \
+    podman run --name nw-db -d --rm \
       -p 3306:3306 \
       -e MYSQL_ROOT_PASSWORD=r00tpa55 \
       -e MYSQL_USER=user1 \
@@ -75,9 +84,14 @@ start_db() {
       mynorthwind
 }
 
+stop_app() {
+    echo "*** Stopping app container ***"
+    podman stop nw-app
+}
+
 stop_db() {
-    echo "*** Stopping and removing database container ***"
-    podman stop nwdb
+    echo "*** Stopping database container ***"
+    podman stop nw-db
 }
 
 # Exit if no target command specified

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+
+images:
+- name: northwind-app
+  newName: 'image-registry.openshift-image-registry.svc:5000/northwind/northwind-app'
+  newTag: latest
+- name: northwind-db
+  newName: 'image-registry.openshift-image-registry.svc:5000/northwind/northwind-db'
+  newTag: latest

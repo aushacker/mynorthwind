@@ -16,29 +16,29 @@ spec:
         deployment: nw-db
     spec:
       containers:
-      - image: 'image-registry.openshift-image-registry.svc:5000/mynorthwind/mynorthwind'
+      - image: northwind-db
         name: northwind
         env:
-          - name: MYSQL_USER
-            valueFrom:
-              configMapKeyRef:
-                name: nwconfig
-                key: MYSQL_USER
           - name: MYSQL_DATABASE
             valueFrom:
               configMapKeyRef:
                 name: nwconfig
                 key: MYSQL_DATABASE
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: dbpw
-                key: MYSQL_PASSWORD
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: dbpw
                 key: MYSQL_ROOT_PASSWORD
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: nwconfig
+                key: MYSQL_USER
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dbpw
+                key: MYSQL_PASSWORD
         ports:
           - containerPort: 3306
             protocol: TCP

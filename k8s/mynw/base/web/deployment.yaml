@@ -16,20 +16,20 @@ spec:
         deployment: nw-web
     spec:
       containers:
-      - image: quay.io/sdavies/javadb:latest
+      - image: northwind-app
         name: nw-web
         env:
-          - name: MYSQL_USER
-            valueFrom:
-              configMapKeyRef:
-                name: nwconfig
-                key: MYSQL_USER
           - name: MYSQL_DATABASE
             valueFrom:
               configMapKeyRef:
                 name: nwconfig
                 key: MYSQL_DATABASE
-          - name: MYSQL_PASSWORD
+          - name: DS1_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: nwconfig
+                key: MYSQL_USER
+          - name: DS1_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: dbpw

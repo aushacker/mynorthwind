@@ -1,0 +1,13 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: nw-web
+spec:
+  host: northwind.apps-crc.testing
+  to:
+    kind: Service
+    name: nw-web
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None

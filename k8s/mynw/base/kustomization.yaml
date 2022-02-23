@@ -6,3 +6,8 @@ resources:
 - secret.yaml
 - db
 - web
+
+commonLabels:
+  app: northwind
+  app.kubernetes.io/part-of: northwind
+

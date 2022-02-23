@@ -12,7 +12,7 @@
 #
 mavenMirror='http://maximin:8081/repository/maven-redhat/'
 eapImage='registry.redhat.io/jboss-eap-7/eap73-openjdk8-openshift-rhel7'
-eapImageRuntime='registry.redhat.io/jboss-eap-7/eap73-openjdk8-openshift-rhel7'
+eapImageRuntime='registry.redhat.io/jboss-eap-7/eap73-openjdk8-runtime-openshift-rhel7'
 
 usage() {
     echo "Usage: build.sh COMMAND [COMMAND]..."
@@ -31,17 +31,28 @@ clean() {
 build_app() {
     echo "*** Building application image ***"
     pushd javadb > /dev/null
-    podman rmi javadb
+    podman rmi northwind-app-artifacts
+    podman rmi northwind-app
+
     builder=$(buildah from ${eapImage})
-    buildah config -e MAVEN_MIRROR_URL="${mavenMirror}" \
-        -e GALLEON_PROVISION_LAYERS="jaxrs-server,observability" \
-        -e GALLEON_PROVISION_DEFAULT_FAT_SERVER="false" \
+    buildah config \
+        -e MAVEN_MIRROR_URL="${mavenMirror}" \
+        -e GALLEON_PROVISION_DEFAULT_FAT_SERVER="true" \
         -e CUSTOM_INSTALL_DIRECTORIES=s2i/custom \
-        -e ARTIFACT_DIR="" ${builder}
+        -e ARTIFACT_DIR="" \
+        ${builder}
     buildah copy --chown 185:0 ${builder} . /tmp/src
     buildah run ${builder} -- /usr/local/s2i/assemble
-    buildah config --entrypoint "/usr/local/s2i/run" ${builder}
-    buildah commit ${builder} javadb
+    buildah commit ${builder} northwind-app-artifacts
+
+    rt=$(buildah from ${eapImageRuntime})
+    buildah config \
+        -e GALLEON_PROVISION_LAYERS="jaxrs-server,observability" \
+        ${rt}
+    buildah copy --chown 185:0 --from ${builder} ${rt} '/s2i-output/server' $JBOSS_HOME
+    buildah config --cmd /home/jboss/bin/openshift-launch.sh ${rt}
+    buildah commit --rm ${rt} northwind-app
+
     buildah rm ${builder}
     popd > /dev/null
 }
@@ -70,7 +81,7 @@ start_app() {
       -e DS1_MAX_POOL_SIZE=20 \
       -e DS1_CONNECTION_CHECKER=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker \
       -e DS1_EXCEPTION_SORTER=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter \
-      javadb
+      northwind-app-artifacts
 }
 
 start_db() {
